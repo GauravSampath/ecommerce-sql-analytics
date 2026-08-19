@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # 1. The High-Speed Memory Cache
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+
+  # 2. The Streamlit Web Dashboard UI
+  dashboard:
+    build: .
+    container_name: streamlit_dashboard
+    ports:
+      - "8585:8585"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  # 3. The Live Traffic Simulator
+  producer:
+    build: .
+    container_name: live_producer
+    command: python producer.py
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  # 4. The Long-Term Database Archiver
+  db_worker:
+    build: .
+    container_name: database_worker
+    command: python db_worker.py
+    volumes:
+      - .:/app
+    depends_on:
+      - redis

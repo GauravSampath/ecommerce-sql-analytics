@@ -1,17 +1,17 @@
-# 1. Use the official lightweight Python image from Docker Hub
+# 1. Use official lightweight Python image
 FROM python:3.12-slim
 
-# 2. Set the working directory inside the virtual container container
+# 2. Set the working directory inside the container
 WORKDIR /app
 
-# 3. Copy our Python project files from your computer into the container
-COPY app.py ingest_data.py ecommerce.db ./
+# 3. Copy our Python project files into the container
+COPY . /app
 
-# 4. Install the required external software libraries
-RUN pip install --no-cache-dir streamlit pandas plotly scikit-learn openpyxl starlette uvicorn
+# 4. Install required libraries (Added redis module)
+RUN pip install --no-cache-dir streamlit redis pandas scikit-learn openpyxl
 
-# 5. Open up port 8501 so web browsers can connect to the container
-EXPOSE 8501
+# 5. Open up port 8585 for web browsers
+EXPOSE 8585
 
-# 6. Command to automatically run the platform when the container starts
-CMD ["python", "-m", "streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# 6. Default command (Overridden by docker-compose for workers)
+CMD ["streamlit", "run", "app.py", "--server.port=8585", "--server.address=0.0.0.0"]
