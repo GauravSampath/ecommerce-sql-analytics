@@ -1,28 +1,28 @@
-# 📊 E-Commerce SQL Analytics & Predictive Platform
+# 📊 Real-Time Event-Driven E-Commerce Analytics Platform
 
-A production-grade, containerized data analytics dashboard built entirely in Python. The platform ingests real-world transaction logs, stores them in a relational schema, and runs statistical machine learning models to deliver actionable business intelligence.
+A production-grade, event-driven data streaming pipeline and analytics dashboard built using a microservices architecture. The platform simulates high-velocity storefront transactions, caches concurrent traffic bursts in an in-memory data store to achieve sub-millisecond ingestion latency, and pushes structured data down to disk storage for historical machine learning forecasting.
 
-## 🚀 Core Features
-- **Relational SQL Storage:** Migrated architecture from local mockups to a structured SQLite engine querying 500k+ transaction records.
-- **Predictive ML Engines:** Integrates Scikit-Learn K-Means clustering for customer segmentation and rolling time-series trend vectors for 3-month sales forecasting.
-- **Environment Isolation:** Containerized via Docker to ensure reliable, cross-platform local workspace replication.
+## 🏗️ System Architecture
 
-## 🛠️ Tech Stack
-- **Languages:** Python, SQL
-- **Libraries:** Pandas, NumPy, Scikit-Learn, Plotly, Streamlit
-- **DevOps/Databases:** Docker, SQLite3
+1. **The Live Data Stream (`producer.py`):** An event generator simulating erratic storefront checkouts, packaging client transactions into JSON payloads at high frequency.
+2. **The High-Speed Cache (`Redis`):** Handles rapid data ingestion as an in-memory message buffer, decoupling incoming website traffic from physical database write limits.
+3. **The Live Dashboard UI (`app.py`):** A Streamlit application utilizing isolated visual Fragments to dynamically query the live Redis cache and update charts every second without page lag.
+4. **The Storage Syncer (`db_worker.py`):** An independent background process that reads memory snapshots from Redis and safely transfers historical records into a persistent SQLite engine.
 
-## 📦 How to Run Locally
+## 🛠️ Infrastructure Tech Stack
 
-### 1. Ingest and Process Data
-Run the ETL script to parse, clean, and populate the local relational database:
+- **Languages & Frameworks:** Python, Streamlit, SQL
+- **Core Caching Engine:** Redis (Key-Value In-Memory Store)
+- **Data Engineering:** Pandas, SQLite3
+- **Containerization & DevOps:** Docker, Docker Compose
+
+## 📦 How to Launch the Cluster
+
+Ensure Docker Desktop is active on your machine, then open your project root directory and spin up all four interconnected services simultaneously using Docker Compose:
+
 ```bash
-python ingest_data.py
+docker compose up --build
 ```
 
-### 2. Launch the Analytics App
-Start the background engine and access the interface on your network port:
-```bash
-python -m streamlit run app.py --server.port 8585
-```
-Open your browser and navigate to `http://localhost:8585`.
+Once compilation finishes, open your browser and navigate to:
+👉 http://localhost:8585
